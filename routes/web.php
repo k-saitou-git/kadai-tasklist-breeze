@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TasksController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,18 +15,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//トップページにアクセスされたとき
 Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+//ログイン後にタスク一覧に遷移してCRUD操作ができるようにする(auth認証済み)
+Route::group(['middleware' => ['auth']], function(){
+    Route::get('/dashboard', [TasksController::class, 'index']);
+    Route::resource('tasks', TasksController::class);
+});
+
 
 require __DIR__.'/auth.php';

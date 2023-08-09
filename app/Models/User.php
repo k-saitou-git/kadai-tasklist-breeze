@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+//use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -41,4 +41,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
+    // このユーザが所有するタスク（Tasklistモデルとの関係を定義）
+    public function tasklists()
+    {
+        return $this->hasMany(Tasklist::class);
+    }
+    
+     // このユーザに関係するモデルの件数をロードする
+    public function loadRelationshipCounts()
+    {
+        $this->loadCount('tasklists');
+    }
+
 }
